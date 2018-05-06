@@ -1,0 +1,103 @@
+<h2><%=  l(:roadmaps_name) %></h2>
+
+<div id="roadmap">
+
+  <% @results.each do |vo| %>
+    <h3 class="icon22 icon22-package">
+      <%= link_to vo.project_name, {:controller => 'projects', :action => 'show', :id => vo.project_identifier} %> - 
+      <%= link_to vo.name, {:controller => 'versions', :action => 'show', :id => vo.version_id} %>
+      <span style="font-size:0.7em;">
+        <%= link_to l(:edit), {:controller => 'versions', :action => 'edit', :id => vo.version_id} %>
+      </span>
+    </h3>
+
+    <div style="padding-bottom:5px;text-align:center;">
+      <table class="progress" style="width:70%;height:2em;">
+        <tr>
+          <% if vo.finish_percentage == 0 &&  vo.unfinish_percentage == 0 %>
+            <td class="todo" style="width: 100%;"></td>
+          <% elsif vo.unfinish_percentage == 100 %>
+            <td class="todo" style="width:100%;"></td>
+          <% elsif vo.unfinish_percentage == 100 %>
+            <td class="closed" style="width:100%;"></td>
+          <% else %>
+            <td class="closed" style="width: <%=vo.finish_percentage%>%;"></td>
+            <td class="todo" style="width:<%=vo.unfinish_percentage%>%;"></td>
+          <% end %>
+        </tr>
+      </table>
+      <div style="font-size:1.8em;">
+        <%= vo.finish_percentage %>%&nbsp;&nbsp;&nbsp;
+        <% if vo.late < 0 %>
+          <strong style="color:red;"><%=l(:late, :days => vo.late.abs)%></strong>
+        <% else %>
+          <%= l(:days_to_go, :days => vo.late) %>
+        <% end %>
+      </div>
+    </div>
+    
+    <table class="list issues">
+      <tr>
+        <th rowspan="2"><%=l(:descripton)%></th>
+        <td rowspan="2" style="width:25%"><%= vo.description %></td>
+        <th rowspan="2"><%=l(:assigned_users)%></th>
+        <td rowspan="2">
+          <% vo.assigned_users.each do |user| %>
+            <%= link_to user.lastname, {:controller => 'users', :action => 'show', :id => user.id} %>
+            (<%=user.count%>)<br />
+          <% end %>
+        </td>
+        <th><%=l(:ticket_status)%></th>
+        <td>
+          <%= link_to vo.finish_num, project_issues_path(vo.project_identifier, :status_id => 'c', :fixed_version_id => vo.version_id, :set_filter => '1') %>
+          <%= l(:finished) %>(<%= vo.finish_percentage %>%),&#160;
+          <%= link_to vo.unfinish_num, project_issues_path(vo.project_identifier, :fixed_version_id => vo.version_id, :set_filter => '1', :status_id => 'o') %>
+          <%= l(:unfinished) %>(<%= vo.unfinish_percentage %>%)
+        </td>
+        <th><%=l(:man_hours)%></th>
+        <td>
+          <%= l(:estimated_hours) %>:
+          <% if vo.estimated_hours == 0.0 %>
+            <strong style="color:red;"><%= vo.estimated_hours %></strong>
+          <% else %>
+            <%= vo.estimated_hours %>
+          <% end %>
+           <%= l(:hours) %>,&#160;
+          <%= l(:passed_hours) %>:
+          <% if vo.estimated_hours <= vo.passed_hours %>
+            <strong style="color:red;"><%=vo.passed_hours%></strong>
+          <% else %>
+            <%=vo.passed_hours%>
+          <% end %>
+          <%= l(:hours) %>
+        </td>
+      </tr>
+      <tr>
+        <th><%=l(:version_effective_date)%></th>
+        <td>
+          <% if vo.effective_date == nil %>
+            <strong style="color:red;"><%=l(:no_version_effective_date)%></strong>
+          <% elsif vo.effective_date < Date::today %>
+            <strong style="color:red;"><%=vo.effective_date.to_s%></strong>
+          <% else %>
+            <%=vo.effective_date.to_s%>
+          <% end %>
+        </td>
+        <th><%=l(:actual_date)%></th>
+        <td>
+          <% if vo.start_date == nil && vo.due_date == nil %>
+            <strong style="color:red;"><%=l(:no_date)%></strong>
+          <% elsif vo.start_date == nil %>
+            <strong style="color:red;"><%=l(:no_start_date)%></strong>~<%=vo.due_date.to_s%>
+          <% elsif vo.due_date == nil %>
+            <%=vo.start_date.to_s%>~<strong style="color:red;"><%=l(:no_due_date)%></strong>
+          <% else %>
+            <%=vo.start_date.to_s%>~<%=vo.due_date.to_s%>
+          <% end %>
+        </td>
+      </tr>
+    </table>
+
+    <div style="padding:15px 15px"></div>
+  <% end %>
+</div>
