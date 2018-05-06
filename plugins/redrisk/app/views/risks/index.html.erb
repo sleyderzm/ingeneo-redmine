@@ -1,0 +1,35 @@
+<div class="contextual">
+  <%= link_to t('new') + ' ' + Risk.model_name.human(count: 1), new_risk_path, :class => 'icon icon-add' %>
+</div>
+
+<h2><%= Risk.model_name.human(count: 2) %></h2>
+
+<div class="autoscroll">
+<table class="list issues">
+  <tr>
+    <th>#</th>
+    <th><%= t('risk.attributes.title') %></th>
+    <th><%= t('risk.attributes.status') %></th>
+    <th><%= t('risk.attributes.identification_date') %></th>
+    <th><%= t('risk.attributes.priority') %></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @risks.each do |risk| %>
+  <tr>
+    <td><%= link_to risk.id, show_risk_path(risk_id: risk.id) %></td>
+    <td><%= link_to risk.title, show_risk_path(risk_id: risk.id) %></td>
+    <td><%= Risk.status_to_text(risk.status) %></td>
+    <td><%= risk.identification_date %></td>
+    <td><%= Risk.priority_to_text(risk.priority) %></td>
+    <td><%= link_to t('edit'), edit_risk_path(risk_id: risk.id), class: 'icon icon-edit' %></td>
+    <td><%= link_to t('destroy'), destroy_risk_path(risk_id: risk.id), method: :delete, data: { confirm: t('are_you_sure') }, class: 'icon icon-del' %></td>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<br />
+<hr />
+<%= render :template => 'action_plans/index' %>

@@ -1,0 +1,68 @@
+<div class="issue">
+  <div class="subject">
+    <h3><%= t('risk.attributes.title') %>:
+      <%= @risk.title %>
+    </h3>
+  </div>
+  <br />
+
+  <table class="attributes">
+    <tr>
+      <th><%= t('risk.attributes.status') %>:</th>
+      <td><%= Risk.status_to_text(@risk.status) %></td>
+      <th><%= t('risk.attributes.effort') %>:</th>
+      <td><%= @risk.effort %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('risk.attributes.origin') %>:</th>
+      <td><%= Risk.origin_to_text(@risk.origin) %></td>
+      <th><%= t('risk.attributes.cost') %>:</th>
+      <td><%= number_to_currency @risk.cost %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('risk.attributes.description') %>:</th>
+      <td><%= @risk.description %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('risk.attributes.source') %>:</th>
+      <td><%= Risk.source_to_text(@risk.source) %></td>
+      <th><%= t('risk.attributes.identification_date') %>:</th>
+      <td><%= @risk.identification_date %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('risk.attributes.category') %>:</th>
+      <td><%= Risk.category_to_text(@risk.category) %></td>
+      <th><%= t('risk.attributes.created_by') %>:</th>
+      <td><%= link_to_user(User.find(@risk.created_by)) unless @risk.created_by.nil? %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('risk.attributes.probability') %>:</th>
+      <td><%= Risk.probability_to_text(@risk.probability) %></td>
+      <th><%= t('risk.attributes.assigned_to') %>:</th>
+      <td><%= link_to_user(User.find(@risk.assigned_to)) unless @risk.assigned_to.nil? %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('risk.attributes.impact') %>:</th>
+      <td><%= Risk.impact_to_text(@risk.impact) %></td>
+      <th><%= t('risk.attributes.strategy') %>:</th>
+      <td><%= Risk.strategy_to_text(@risk.strategy) %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('risk.attributes.priority') %>:</th>
+      <td><%= Risk.priority_to_text(@risk.priority) %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('risk.attributes.trigger') %>:</th>
+      <td><%= @risk.trigger %></td>
+    </tr>
+  </table>
+
+</div>

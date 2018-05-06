@@ -1,0 +1,20 @@
+<div class="contextual">
+  <%= link_to_function t('back'), "history.back()", :class => 'icon icon-reload' %>
+</div>
+
+<h2><%= t('version_history') %> - <%= ActionPlan.model_name.human(count: 1) %>: <%= @action_plan.title %> </h2>
+<div class="autoscroll" >
+  <table class="list issues">
+    <tr>
+      <th><%= t('version_histories.version') %></th>
+      <th><%= t('version_histories.modification_date') %></th>
+    </tr>
+
+    <% for version in @version_histories.reverse %>
+        <tr class="issue">
+          <td><%= link_to '#' + version.version.to_s, show_action_plan_version_history_path(version_id: version.version) %></td>
+          <td><%= link_to version.updated_at.to_formatted_s(:long), show_action_plan_version_history_path(version_id: version.version) %></td>
+        </tr>
+    <% end %>
+  </table>
+</div>
