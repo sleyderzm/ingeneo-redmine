@@ -1,5 +1,0 @@
-<%= error_messages_for 'poll' %>
-<div class="box tabular">
-    <p><%= f.text_area :question,  :required => true, :cols => 60, :rows => 2 %></p>
-    <p><%= f.check_box :revote, :checked => @poll.revote != false %></p>
-</div>

@@ -7,6 +7,6 @@ Redmine::Plugin.register :redmine_portfolio_management do
   author_url 'https://github.com/MarcuSacramento'
   
   menu :top_menu, :portfolio_management, { :controller => 'portfolio_management', :action => 'index' }, :caption => :portfolio_management_menu
-  settings :default => {:portfolio_management_attribute => 'Portfolio name'}, :partial => 'settings/redmine_portfolio_management_settings'
+  settings :default => {:portfolio_management_attribute => 'Portfolio',:portfolio_management_manager_attribute => 'Manager'}, :partial => 'settings/redmine_portfolio_management_settings'
   
 end

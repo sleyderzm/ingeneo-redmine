@@ -4,7 +4,7 @@
 <%= javascript_include_tag "tablePage.js", :plugin => 'redmine_portfolio_management' %>
 <% end %>
 <h1><%= l(:portfolio_management_title) %></h1>
-<div id="projects-index">
+<div>
    <% RedminePortfolioManagement::Redmine::list_portfolio_values.each do |portfolio| %>
    <h2><%=raw portfolio['value']%></h2>
    <div class="datagrid">

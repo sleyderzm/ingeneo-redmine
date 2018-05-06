@@ -37,7 +37,7 @@ module RedmineChecklists
           if ActiveRecord::VERSION::MAJOR >= 4
             has_many :checklists, lambda { order("#{Checklist.table_name}.position") }, :class_name => 'Checklist', :dependent => :destroy, :inverse_of => :issue
           else
-            has_many :checklists, :class_name => 'Checklist', :dependent => :destroy, :inverse_of => :issue, :order => 'position'
+            has_many :checklists, -> { order(:position) }, :class_name => 'Checklist', :dependent => :destroy, :inverse_of => :issue
           end
 
           accepts_nested_attributes_for :checklists, :allow_destroy => true, :reject_if => proc { |attrs| attrs['subject'].blank? }
