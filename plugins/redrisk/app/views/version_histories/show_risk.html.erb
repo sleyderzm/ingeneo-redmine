@@ -1,0 +1,4 @@
+<h2>
+  <%= Risk.model_name.human(count: 1) %> #<%= params[:risk_id] %> - <%= t('version_histories.version') %> <%= @risk.version %> <%= t('version_histories.changed_on') %>: <%=@risk.updated_at.to_formatted_s(:long) %>
+</h2>
+<%= render partial:'risks/show_template' %>

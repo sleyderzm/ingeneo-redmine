@@ -1,0 +1,97 @@
+<%= render 'header' %>
+
+<%= error_messages_for 'risk' %>
+
+<input id="money_suffix" type='hidden' value="<%= t('money_suffix') %>">
+<input id="money_prefix" type='hidden' value="<%= t('money_prefix') %>">
+
+<div class='box tabular new_issue'>
+  <%= form_for(@risk, url: create_risk_path) do |f| %>
+      <div class="splitcontentleft">
+        <p>
+          <label for="risk_title"><%= t('risk.attributes.title') %> <span class="required">*</span></label>
+          <%= f.text_field :title%>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.status') %>
+          <%= f.select(:status, options_for_select(options_for_status, @risk.status)) %>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.origin') %>
+          <%= f.select(:origin, options_for_select(options_for_origin, @risk.origin)) %>
+        </p>
+      </div>
+      <div class="splitcontentright">
+        <p>
+          <%= f.label t('risk.attributes.effort') %>
+          <%= f.text_field :effort %> - <%= t('hours') %>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.cost') %>
+          <%= f.text_field :cost, class: 'money_field' %>
+        </p>
+      </div>
+      <p>
+        <%= f.label t('risk.attributes.description') %>
+        <%= f.text_area :description, :class => 'wiki-edit', :rows => 10, :cols => 60 %>
+      </p>
+      <div class="splitcontentleft">
+        <p>
+          <%= f.label t('risk.attributes.source') %>
+          <%= f.select(:source, options_for_select(options_for_source, @risk.source), { id: 'risk_source',
+                       prompt: t('risks.form.select_one_source') },
+                       onchange: "get_categories_by_source('#{escape_javascript risks_get_category_by_source_url(source_id: :replace_source)}')" )%>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.category') %>
+          <%= f.select(:category, '', id: 'risk_category', prompt: t('risks.form.select_one_category')) %>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.probability') %>
+          <%= f.select(:probability, options_for_select(options_for_probability, @risk.probability), { id: 'risk_probability',
+                       prompt: t('risks.form.select_one_probability')},
+                       onchange: "get_priority_by_probability_and_impact('#{escape_javascript risks_get_priority_by_probability_and_impact_url(
+                                                                                                      probability_id: :replace_probability, impact_id: :replace_impact)}')") %>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.impact') %>
+          <%= f.select(:impact, options_for_select(options_for_impact, @risk.impact), { id: 'risk_impact',
+                       prompt: t('risks.form.select_one_impact')},
+                       onchange: "get_priority_by_probability_and_impact('#{escape_javascript risks_get_priority_by_probability_and_impact_url(
+                                                                                                      probability_id: :replace_probability, impact_id: :replace_impact)}')") %>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.priority') %>
+          <%= text_field_tag '', '', id: 'risk_priority', readonly: true %>
+          <%= f.hidden_field :priority, id: 'risk_priority_value' %>
+        </p>
+      </div>
+      <div class="splitcontentright">
+        <p>
+          <%= f.label t('risk.attributes.identification_date') %>
+          <%= f.text_field :identification_date %>
+          <%= calendar_for('risk_identification_date') %>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.created_by') %>
+          <%= text_field_tag '', User.current.name, readonly: true %>
+          <%= f.hidden_field :created_by, value: User.current.id %>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.assigned_to') %>
+          <%= f.collection_select(:assigned_to, User.joins(:members).where("members.project_id = ?", @project.id), :id, :name, prompt: t('risks.form.select_one_member') ) %>
+        </p>
+        <p>
+          <%= f.label t('risk.attributes.strategy') %>
+          <%= f.select(:strategy, options_for_select(options_for_strategy, @risk.strategy)) %>
+        </p>
+      </div>
+      <p>
+        <%= f.label t('risk.attributes.trigger') %>
+        <%= f.text_area :trigger, :class => 'wiki-edit', :rows => 10, :cols => 60 %>
+      </p>
+      <p>
+        <%= f.submit t('create') + ' ' + Risk.model_name.human(count: 1) %>
+      </p>
+  <% end %>
+</div>

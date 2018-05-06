@@ -1,0 +1,43 @@
+<div class="issue">
+  <div class="subject">
+    <h3><%= t('action_plan.attributes.title') %>:
+      <%= @action_plan.title %>
+    </h3>
+  </div>
+  <br />
+
+<p>
+  <b><%= t('action_plan.attributes.kind') %>:</b>
+  <%= ActionPlan.kind_to_text(@action_plan.kind) %>
+</p>
+
+<p>
+  <b><%= t('action_plan.attributes.description') %>:</b>
+  <%= @action_plan.description %>
+</p>
+
+<p>
+  <b><%= t('action_plan.attributes.assigned_to') %>:</b>
+  <%= link_to_user(User.find(@action_plan.assigned_to)) unless @action_plan.assigned_to.nil? %>
+</p>
+
+<p>
+  <b> <%= t('action_plan.attributes.term') %>:</b>
+  <%= @action_plan.term %>
+</p>
+
+<p>
+  <b><%= t('action_plan.attributes.finish_date') %>:</b>
+  <%= @action_plan.finish_date %>
+</p>
+
+<p>
+  <b><%= t('action_plans.form.associated_risk') %>:</b>
+  <%= link_to Risk.find(@action_plan.risk_id).title, show_risk_path(risk_id: @action_plan.risk_id) %>
+</p>
+
+<p>
+  <b><%= t('action_plan.attributes.effective') %>:</b>
+  <%= t(@action_plan.effective.to_s) %>
+</p>
+</div>

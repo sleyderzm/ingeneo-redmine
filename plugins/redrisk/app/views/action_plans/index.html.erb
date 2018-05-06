@@ -1,0 +1,31 @@
+<h3><%= ActionPlan.model_name.human(count: 2) %></h3>
+
+<table class="list issues">
+  <tr>
+    <th>#</th>
+    <th><%= t('action_plan.attributes.title') %></th>
+    <th><%= t('action_plan.attributes.kind') %></th>
+    <th><%= t('action_plan.attributes.assigned_to') %></th>
+    <th><%= t('action_plan.attributes.term') %></th>
+    <th><%= t('action_plan.attributes.finish_date') %></th>
+    <th><%= t('action_plans.form.associated_risk') %></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @action_plans.each do |action_plan| %>
+  <tr>
+    <td><%= link_to action_plan.id, show_action_plan_path(action_plan_id: action_plan.id) %></td>
+    <td><%= link_to action_plan.title, show_action_plan_path(action_plan_id: action_plan.id) %></td>
+    <td><%= ActionPlan.kind_to_text(action_plan.kind) %></td>
+    <td><%= link_to_user(User.find(action_plan.assigned_to)) if action_plan.assigned_to.present? and User.find(action_plan.assigned_to).present?%></td>
+    <td><%= action_plan.term %></td>
+    <td><%= action_plan.finish_date %></td>
+    <td><%= link_to action_plan.risk.title, show_risk_path(risk_id: action_plan.risk.id) %></td>
+    <td><%= link_to t('edit'), edit_action_plan_path(action_plan_id: action_plan.id), class: 'icon icon-edit' %></td>
+    <td><%= link_to t('destroy'), destroy_action_plan_path(action_plan_id: action_plan.id), method: :delete, data: { confirm: t('are_you_sure') }, class: 'icon icon-del' %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
