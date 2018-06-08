@@ -38,7 +38,7 @@ class BaselinesController < ApplicationController
   end
 
   def create
-    @baseline = Baseline.new(params[:baseline])
+    @baseline = Baseline.new(baseline_params)
     @baseline.project = @project
     @baseline.update_hours = true if params[:update_estimated_hours] == "1"
 
@@ -58,9 +58,8 @@ class BaselinesController < ApplicationController
   end
 
   def update
-    if request.put? && params[:baseline]
-      attributes = params[:baseline].dup
-      @baseline.safe_attributes = attributes
+    if params[:baseline]
+      @baseline.safe_attributes = baseline_params
 
       if @baseline.save
         flash[:notice] = l(:notice_successful_update)
@@ -74,6 +73,12 @@ class BaselinesController < ApplicationController
   def destroy
     @baseline.destroy
     redirect_to settings_project_path(@project, :tab => 'baselines')
+  end
+
+  private
+
+  def baseline_params
+    params.require(:baseline).permit(:name, :description, :due_date)
   end
 
 end

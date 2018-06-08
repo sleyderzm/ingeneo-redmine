@@ -1,0 +1,28 @@
+<h2><%= l(:label_import_issues) %></h2>
+
+<fieldset>
+	<legend><%= l(:label_options) %></legend>
+	<%= form_tag({:controller => "import_issues", :action => "import", :id => @project.id}, :multipart => true, :id => 'edit_form') do %>
+		<%= hidden_field_tag "importing", "1"%>
+		<label><%= l(:label_attachment) %>&nbsp;</label> <%= file_field_tag "attachment" %></label>
+		<%= submit_tag l(:button_upload), :style => "margin-left: 5px;" %>
+		<%= link_to(l(:label_import_help), {:controller => 'import_issues', :action => 'help', :id => @project.id}, :class => 'icon icon-help', :style => "margin-left: 5px;") %>
+		<%= link_to l(:label_format_example), "/redmine/plugin_assets/import_issues/help/formato_peticiones.csv", :class => 'icon icon-help', :style => "margin-left: 10px;" %>
+	<% end %>
+</fieldset>
+<% if @valid %>
+	<% i = 0 %>
+	<%= form_tag({:action => :save, :id => @project.id}) do -%>
+		<% @issues.each do |issue| %>
+			<%= render :partial => 'form', :locals => { :issue => issue, :i => i } %>
+			<% i += 1 %>
+		<% end %>
+	<%= submit_tag l(:button_add), :style => "margin-top: 10px;" %>
+	<% end -%>
+<% end %>
+
+
+
+
+
+<% html_title(l(:label_import_issues)) -%>

@@ -1,0 +1,12 @@
+<table class="list versions">
+	<tr>
+		<th><%= l(:field_identifier) %></th>
+		<th><%= l(:field_name) %></th>
+	</tr>
+	<% @versions.each do |version| %>
+		<tr>
+			<td><%= version.id %></td>
+			<td><%= version.name %></td>
+		</tr>
+	<% end %>
+</table>

@@ -1,0 +1,14 @@
+<table class="list users">
+	<tr>
+		<th><%= l(:field_identifier) %></th>
+		<th><%= l(:field_login) %></th>
+		<th><%= l(:field_name) %></th>
+	</tr>
+	<% @users.each do |user| %>
+		<tr>
+			<td><%= user.id %></td>
+			<td><%= user.login %></td>
+			<td><%= user.name %></td>
+		</tr>
+	<% end %>
+</table>

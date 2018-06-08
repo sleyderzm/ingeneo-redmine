@@ -1,0 +1,158 @@
+<fieldset>
+
+<legend><%= l(:label_csv_number_field, :number => (i + 1)) %></legend>
+
+<%= error_messages_for issue %>
+
+<div class="box tabular">
+<%= hidden_field_tag "issue[#{i}][project_id]", @project.id %>
+<%= hidden_field_tag "issue[#{i}][issue_number]", issue.issue_number %>
+<%= hidden_field_tag "issue[#{i}][issue_parent_number]", issue.issue_parent_number %>
+<% if issue.safe_attribute? 'is_private' %>
+<p style="float:right; margin-right:1em;">
+  <%= check_box_tag("issue[#{i}][is_private]", :value => "0", :checked => false) %><label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:field_is_private) %></label>
+</p>
+<% end %>
+
+<% if issue.safe_attribute? 'tracker_id' %>
+	<p>
+	<label>
+		<%= l(:field_tracker) %>
+		<span class="required"> *</span>
+	</label>
+	<%= select_tag "issue[#{i}][tracker_id]", options_from_collection_for_select(@project.trackers, "id", "name", issue.tracker_id.to_s) %></p>
+<% end %>
+
+<% if issue.safe_attribute? 'subject' %>
+<p>
+	<label>
+		<%= l(:field_subject) %>
+		<span class="required"> *</span>
+	</label>
+	<%= text_field_tag("issue[#{i}][subject]", issue.subject, :size => 80, :maxlength => 255) %></p>
+<% end %>
+
+<p>
+<% if issue.safe_attribute? 'description' %>
+	<label><%= l(:field_description) %></label>
+	<%=  text_area_tag "issue[#{i}][description]", issue.description, :rows => 2, :class => 'wiki-edit' %>
+<% end %>
+</p>
+
+
+<div class="splitcontent">
+
+<div class="splitcontentleft">
+
+<% if issue.safe_attribute?('non_billable_hours') %>
+<p>
+<label>
+	<%= l(:field_non_billable_hours) %>
+</label>
+<%= check_box_tag "issue[#{i}][non_billable_hours]", "1", issue.non_billable_hours %>
+</p>
+<% end %>
+
+
+<% if issue.safe_attribute?('status_id') %>
+<p>
+<label>
+	<%= l(:field_status) %>
+	<span class="required"> *</span>
+</label>
+<%= select_tag "issue[#{i}][status_id]", options_from_collection_for_select(@statuses, "id", "name", issue.status_id.to_s) %>
+</p>
+<% end %>
+	
+<% if issue.safe_attribute?('priority_id') %>
+<p>
+<label>
+	<%= l(:field_priority) %>
+	<span class="required"> *</span>
+</label>
+<%= select_tag "issue[#{i}][priority_id]", options_from_collection_for_select(@priorities, "id", "name", issue.priority_id.to_s) %>
+</p>
+<% end %>
+
+<% if issue.safe_attribute?('assigned_to_id') %>
+<p>
+<label>
+	<%= l(:field_assigned_to) %>
+	<span class="required"> *</span>
+</label>
+<%= select_tag "issue[#{i}][assigned_to_id]", options_from_collection_for_select(@users, "id", "name", issue.assigned_to_id.to_s) %>
+</p>
+<% end %>
+
+<% if issue.safe_attribute?('category_id') %>
+<p>
+<label>
+	<%= l(:field_category) %>
+</label>
+<%= select_tag "issue[#{i}][category_id]", options_from_collection_for_select(@categories, "id", "name", issue.category_id.to_s) %>
+</p>
+<% end %>
+
+<% if issue.safe_attribute?('fixed_version_id') %>
+<p>
+<label>
+	<%= l(:field_fixed_version) %>
+</label>
+<%= select_tag "issue[#{i}][fixed_version_id]", options_from_collection_for_select(@versions, "id", "name", issue.fixed_version_id.to_s) %>
+</p>
+<% end %>
+
+</div>
+
+<div class="splitcontentright">
+	<% if issue.safe_attribute?('start_date') %>
+	<p>
+	<label>
+		<%= l(:field_start_date) %>
+		<span class="required"> *</span>
+	</label>
+		<%=  text_field_tag "issue[#{i}][start_date]", issue.start_date, :size => 10, :id => "issue_#{i}_start_date" %><%= calendar_for("issue_#{i}_start_date") %>
+	</p>
+	<% end %>
+	
+	<% if issue.safe_attribute?('due_date') %>
+	<p>
+	<label>
+		<%= l(:field_due_date) %>
+		<span class="required"> *</span>
+	</label>
+		<%=  text_field_tag "issue[#{i}][due_date]", issue.due_date, :size => 10, :id => "issue_#{i}_due_date" %><%= calendar_for("issue_#{i}_due_date") %>
+	</p>
+	<% end %>
+	
+	<% if issue.safe_attribute?('estimated_hours') %>
+	<p>
+	<label>
+		<%= l(:field_estimated_hours) %>
+		<span class="required"> *</span>
+	</label>
+		<%=  text_field_tag "issue[#{i}][estimated_hours]", issue.estimated_hours, :size => 3 %>
+	</p>
+	<% end %>
+	
+	<% if issue.safe_attribute?('done_ratio') %>
+	<p>
+	<label>
+		<%= l(:field_done_ratio) %>
+	</label>
+		<%= select_tag "issue[#{i}][done_ratio]", options_for_select((0..10).to_a.collect {|r| ["#{r*10} %", r*10] }, issue.done_ratio.to_s) %>
+	</p>
+	<% end %>
+	
+</div>
+
+</div>
+
+<% if issue.safe_attribute? 'custom_field_values' %>
+	<%= render :partial => 'form_custom_fields', :locals => { :issue => issue, :cont => i }%>
+<% end %>
+
+
+</div>
+
+</fieldset>

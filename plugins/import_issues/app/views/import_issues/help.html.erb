@@ -1,0 +1,11 @@
+<div class="contextual">
+    <%= link_to l(:button_back), {:controller=>"import_issues",:action=>"index", :id => @project.id }, :class => 'icon icon-move' %>
+</div>
+
+<h2><%= l(:label_import_help) %></h2>
+
+<%= l(:label_help_enumerations_list) %>
+<p></p>
+<%= render_tabs import_help_tabs %>
+
+<% html_title(l(:label_import_help)) -%>

@@ -1,0 +1,12 @@
+<table class="list statuses">
+	<tr>
+		<th><%= l(:field_identifier) %></th>
+		<th><%= l(:field_name) %></th>
+	</tr>
+	<% @statuses.each do |status| %>
+		<tr>
+			<td><%= status.id %></td>
+			<td><%= status.name %></td>
+		</tr>
+	<% end %>
+</table>

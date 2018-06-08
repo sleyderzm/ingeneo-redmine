@@ -1,0 +1,13 @@
+# Spanish strings go here for Rails i18n
+es:
+   label_import_issues: "Importar Peticiones"
+   permission_import_issues: "Importar peticiones 2"
+   label_import_help: "Nomenclatura listas desplegables"
+   label_format_example: "Formato de Ejemplo"
+   button_upload: "Subir"
+   label_help_enumerations_list: "Reemplace los valores en el archivo *.csv por el índice de las listas que aparecen a continuación:"
+   label_notice_no_csv_file: "No se cargó el archivo csv"
+   label_notice_no_valid_csv_file: "El archivo %{file}, no es un un .csv válido"
+   label_notice_zero_issues_loaded: "No se cargó ninguna petición"
+   label_notice_total_issues_loaded: "Se importaron %{number} peticiones"
+   label_csv_number_field: "Fila N° %{number}"

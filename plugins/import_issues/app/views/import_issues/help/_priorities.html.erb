@@ -1,0 +1,12 @@
+<table class="list priorities">
+	<tr>
+		<th><%= l(:field_identifier) %></th>
+		<th><%= l(:field_name) %></th>
+	</tr>
+	<% @priorities.each do |priority| %>
+		<tr>
+			<td><%= priority.id %></td>
+			<td><%= priority.name %></td>
+		</tr>
+	<% end %>
+</table>

@@ -1,0 +1,12 @@
+<table class="list trackers">
+	<tr>
+		<th><%= l(:field_identifier) %></th>
+		<th><%= l(:field_name) %></th>
+	</tr>
+	<% @trackers.each do |tracker| %>
+		<tr>
+			<td><%= tracker.id %></td>
+			<td><%= tracker.name %></td>
+		</tr>
+	<% end %>
+</table>
