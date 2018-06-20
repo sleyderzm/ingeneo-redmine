@@ -1,0 +1,12 @@
+api.array :report_rows, api_meta(:total_count => @report_rows.size) do
+  @report_rows.each do |report_row|
+    api.report_row do
+      api.centro_costos report_row.centro_costos
+      api.proyecto report_row.proyecto
+	  api.usuario report_row.usuario
+	  api.total_horas_estimadas report_row.total_horas_estimadas
+	  api.total_horas_ejecutadas report_row.total_horas_ejecutadas
+	  api.total_horas_facturadas report_row.total_horas_facturadas
+    end
+  end
+end
