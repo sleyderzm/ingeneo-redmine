@@ -1,0 +1,38 @@
+<% html_title(l(:workload_site_title)) %>
+
+<div class="contextual">
+    <%= render_action_links %>
+</div>
+
+<h2><%= l(:workload_show_label) %></h2>
+
+
+<%= error_messages_for 'query' %>
+<div class="wrapper">
+  <table class="data">
+    <thead>
+      <tr class="month-names">
+        <td class="logo" rowspan="3">&nbsp;<!--Contains logo or empty space --></td>
+        <%= render :partial => 'month_names_header' %>
+      </tr>
+      <tr class="days-of-month">
+        <%= render :partial => 'day_of_month_header' %>
+      </tr>
+      <tr class="days-of-week">
+        <%= render :partial => 'day_of_week_header' %>
+      </tr>
+    </thead>
+    <% # Iterate over all users:
+       @workloadData.keys.each do |user| %>
+       <%= render :partial => 'workload_for_user',
+                  :locals => { :user => user,
+                               :data => @workloadData[user]
+                             }
+       %>
+    <% end %>
+  </table>
+</div>
+
+<% content_for :sidebar do %>
+	<%= render :partial => 'filters' %>
+<% end %>
