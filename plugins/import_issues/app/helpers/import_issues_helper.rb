@@ -43,7 +43,7 @@ module ImportIssuesHelper
 		end
 		
 		if User.exists?(data[5]); issue.assigned_to_id = data[5];
-		elsif User.count(:id, :conditions => ["login = ?", data[5]]) > 0; issue.assigned_to_id = User.find_by_login(data[5]).id;
+		elsif User.where("login = ?", data[5]).count(:id) > 0; issue.assigned_to_id = User.find_by_login(data[5]).id;
 		else issue.assigned_to_id = ""; end
 		
 		begin

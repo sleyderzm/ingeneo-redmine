@@ -1,0 +1,29 @@
+<div class="contextual">
+<%= link_to_if_authorized l(:button_log_time), {:controller => 'timelog', :action => 'new', :project_id => @project, :issue_id => @issue}, :class => 'icon icon-time-add' %>
+</div>
+
+<h2><%= l(:label_check) %></h2>
+
+<%= form_tag({:controller => 'aux', :action => 'check', :project_id => @project, :issue_id => @issue}, :method => :get, :id => 'query_form') do %>
+<%= hidden_field_tag(:project_id, @project.identifier) unless @project.nil? %>
+<%= hidden_field_tag(:issue_id, @issue.id) unless @issue.nil? %>
+<%= render :partial => 'timelog/date_range' %>
+<% end %>
+
+<div class="total-hours">
+<p><%= l(:label_total_time) %>: <%= html_hours(l_hours(@total_hours)) %></p>
+<p><%= l(:label_total_estimated_hours) %>: <%= html_hours(l_hours(@total_estimated_hours)) %></p>
+<p><%= l(:label_total_billing_time) %>: <%= html_hours(l_hours(@total_billing_hours)) %></p>
+</div>
+
+
+<% unless @entries.empty? %>
+<%= render :partial => 'timelog/list_time_entries', :locals => { :entries => @entries }%>
+<span class="pagination"><%= pagination_links_full @entry_pages, @entry_count %></span>
+<% end %>
+
+
+
+<% html_title l(:label_check) %>
+
+

@@ -1,0 +1,129 @@
+<%= form_tag({:controller => 'aux', :action => 'save_check', :project_id => @project, :issue_id => @issue}, :method => :post, :id => 'save_form', :onsubmit => "copy_query_form(this); return false;") do %>
+<%= hidden_field_tag(:project_id, @project.identifier) unless @project.nil? %>
+<%= hidden_field_tag(:issue_id, @issue.id) unless @issue.nil? %>
+<%= hidden_field_tag 'back_url', url_for(params) %>
+<%= hidden_field_tag 'form_query', '' %>
+
+<div id="query_content">
+
+</div>
+
+<div >
+	<table class="list time-entries">
+		<thead>
+			<% @query.available_columns.each do |column| %>
+				<% next if ! @cols.include? column.name.to_s %>
+				<%= column_header(@query, column) %>
+				<%= content_tag('th',l(:label_total_billing_time)) if column.name.to_s=="billing_hours" %>
+			<% end %>
+			<th>&nbsp;</th>
+		</thead>
+		<tbody>
+		<% entries.each do |entry| -%>
+			<tr class="<%= cycle('odd', 'even') %>">
+			<% @query.available_columns.each do |column| %>
+				<% next if ! @cols.include? column.name.to_s %>
+				<td>
+				<% case column.name.to_s %>
+					<% when 'spent_on' %>
+						<%= format_date(entry.spent_on) %>
+					<% when 'user' %>
+						<%= link_to_user entry.user %>
+					<% when 'activity' %>
+						<%= entry.activity.name %>
+					<% when 'issue' %>
+						<%= entry.issue.subject unless entry.issue.nil? %>
+					<% when 'comments' %>
+						<%= entry.comments %>
+					<% when 'hours' %>
+						<%= entry.hours %>
+					<% when 'issue.estimated_hours' %>
+						<%= entry.issue.estimated_hours unless entry.issue.nil?%>
+					<% when 'revised' %>
+						<% if ! @validations.nil? && ! @validations[entry.id.to_s.to_sym].nil? %>
+							<%= check_box_tag "entries[#{entry.id}][revised]", '1', @validations[entry.id.to_s.to_sym].revised, :disabled => false %>
+							<div class="tooltip" style="display: inline;">
+								<%= link_to_function image_tag("exclamation.png", :style => "vertical-align: sub"), render_time_entry_errors_alert(@validations[entry.id.to_s.to_sym].errors) %>
+								<span class="tip">
+									<%= render_time_entry_errors(@validations[entry.id.to_s.to_sym].errors) %>
+								</span>
+							</div>
+						<% else %>
+							<%= check_box_tag "entries[#{entry.id}][revised]", '1', entry.revised, :disabled => (entry.revised && ! User.current.admin?) %>
+						<% end %>
+					<% when 'billing_hours' %>
+						<% if ! @validations.nil? && ! @validations[entry.id.to_s.to_sym].nil? %>
+							<%= text_field_tag "entries[#{entry.id}][billing_hours]", @validations[entry.id.to_s.to_sym].billing_hours, :size => 3, :disabled => false, :onkeyup => "billing_hours_change('#{entry.id}','#{entry.issue.id}','#{entry.billing_hours}',$(this).val())" %>
+						<% else %>
+							<%= text_field_tag "entries[#{entry.id}][billing_hours]", entry.billing_hours, :size => 3, :disabled => (entry.revised && ! User.current.admin?), :onkeyup => "billing_hours_change('#{entry.id}','#{entry.issue.id}','#{entry.billing_hours}',$(this).val())" %>
+						<% end %>
+					<% when 'billing_comment' %>
+						<% if ! @validations.nil? && ! @validations[entry.id.to_s.to_sym].nil? %>
+							<%= text_area_tag "entries[#{entry.id}][billing_comment]", @validations[entry.id.to_s.to_sym].billing_comment, :size => "40x2", :disabled => false %>
+						<% else %>
+							<%= text_area_tag "entries[#{entry.id}][billing_comment]", entry.billing_comment, :size => "40x2", :disabled => (entry.revised && ! User.current.admin?) %>
+						<% end %>
+					<% else %>
+						<%= "none" %>
+				<% end %>
+				</td>
+				<% if column.name.to_s=='billing_hours'%>
+				<td>
+					<span class="<%=entry.issue.id%>"><%= @issues_billing_hours[entry.issue.id] unless entry.issue.nil? %></span>
+				</td>	
+				<% end%>
+			 <% end %>
+			 <td class="buttons">
+				<% if entry.editable_by?(User.current) && (! entry.revised || User.current.admin?) -%>
+					<%= link_to image_tag('edit.png'), edit_time_entry_path(entry),
+													   :title => l(:button_edit) %>
+					<%= link_to image_tag('delete.png'), time_entry_path(entry),
+														 :data => {:confirm => l(:text_are_you_sure)},
+														 :method => :delete,
+														 :title => l(:button_delete) %>
+				<% end -%>
+			  </td>
+			</tr>
+		<% end %>
+		
+		</tbody>
+	</table>
+</div>
+
+<%= submit_tag l(:button_save) if entries.size > 0 %>
+
+<% end %>
+
+<script>
+	var billingEntry={};
+	
+	function billing_hours_change(entryId, issueId, actualBillingHours, value){
+		spanBillingHours = $("." + issueId);
+		billingHour = Number(spanBillingHours.first().text());
+		if (value && value !== "") {
+			numberValue = Number(value);
+			if (!isNaN(numberValue)) {
+				if (!isNaN(billingEntry[entryId])) {
+					billingHour = billingHour - billingEntry[entryId];
+				}else if(actualBillingHours){
+					billingHour = billingHour - Number(actualBillingHours)
+				}
+				billingHour = billingHour + numberValue;
+				billingEntry[entryId] = numberValue;
+				spanBillingHours.text(billingHour.toFixed(1));
+			}
+		}else{
+			if (billingEntry[entryId]) {
+				billingHour = billingHour - billingEntry[entryId];
+			}
+			billingEntry[entryId] = 0.0;
+			spanBillingHours.text(billingHour.toFixed(1));
+		}
+	}
+	
+	function copy_query_form(form){
+		$("#form_query").val($('#query_form').serialize());
+		form.submit();
+		return false;
+	}
+</script>

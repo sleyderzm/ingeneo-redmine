@@ -91,6 +91,12 @@
     <% end %>
     <%= link_to(l(:label_details), project_time_entries_path(@project)) %> |
     <%= link_to(l(:label_report), report_project_time_entries_path(@project)) %>
+      <% if @project %>
+        <% if User.current.allowed_to?(:check_time_entries, @project) %>
+          |<%= link_to(l(:label_check), {:controller => 'aux', :action => 'check', :project_id => @project, :issue_id => @issue}) %>
+
+        <% end %>
+      <% end %>
     </p>
   </div>
 <% end %>

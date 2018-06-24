@@ -1,0 +1,17 @@
+<%= render :partial => 'queries/query_form' %>
+
+<div class="tabs hide-when-print">
+  <% query_params = request.query_parameters %>
+  <ul>
+    <li><%= link_to(l(:label_details), _time_entries_path(@project, nil, :params => query_params),
+                    :class => (action_name == 'index' ? 'selected' : nil)) %></li>
+    <li><%= link_to(l(:label_report), _report_time_entries_path(@project, nil, :params => query_params),
+                    :class => (action_name == 'report' ? 'selected' : nil)) %></li>
+    <% if @project %>
+      <% if User.current.allowed_to?(:check_time_entries, @project) %>
+        <li><%= link_to(l(:label_check), query_params.merge({:controller => 'aux', :action => 'check', :project_id => @project, :issue_id => @issue}),
+                        :class => (['check', 'save_check'].include?(action_name) ? 'selected' : nil)) %></li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
